@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.21'
+    ext.dl4j_version = "1.0.0-beta"
 
     repositories {
         mavenCentral()
@@ -20,6 +21,10 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.deeplearning4j:deeplearning4j-core:${dl4j_version}"
+    compile "org.nd4j:nd4j-native-platform:${dl4j_version}"
+    compile "org.slf4j:slf4j-simple:1.7.25"
+    compile "org.slf4j:slf4j-api:1.7.25"
 }
 
 compileKotlin {
@@ -27,4 +32,21 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+sourceSets {
+    main {
+        /*
+        Kotlin examples do not use java sources, so let's exclude them all
+         */
+        java {
+            srcDir "src/main/java"
+            exclude "**"
+        }
+    }
+}
+
+task RunTest(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.willstu.dl.Test"
 }
